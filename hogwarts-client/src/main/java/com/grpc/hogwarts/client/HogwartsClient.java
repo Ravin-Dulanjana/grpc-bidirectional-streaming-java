@@ -14,6 +14,8 @@ import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 
 public class HogwartsClient {
@@ -24,15 +26,18 @@ public class HogwartsClient {
     public HogwartsClient(Channel channel){
         stub = HogwartsServiceGrpc.newStub(channel);
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8080).usePlaintext().build();
         HogwartsClient client = new HogwartsClient(channel);
-
-        client.connect();
+        try {
+            client.connect();
+        } finally {
+            channel.shutdown().awaitTermination(100, TimeUnit.SECONDS);
+        }
     }
 
 
-    public void connect() {
+    public void connect() throws InterruptedException {
         StreamObserver<Data> responseObserver = new StreamObserver<>() {
             @Override
             public void onNext(Data data) {
@@ -83,12 +88,12 @@ public class HogwartsClient {
 
             Data data = Data.newBuilder().setData(Any.pack(StringValue.of(clientUUID))).build() ;
             requestObserver.onNext(data);
-//            while(true){
-//
-//            }
-            requestObserver.onCompleted();
+            while(true){
+                TimeUnit.SECONDS.sleep(5);
+            }
+            //requestObserver.onCompleted();
         }
-        catch (RuntimeException e) {
+        catch (RuntimeException | InterruptedException e) {
             requestObserver.onError(e);
             throw e;
         }

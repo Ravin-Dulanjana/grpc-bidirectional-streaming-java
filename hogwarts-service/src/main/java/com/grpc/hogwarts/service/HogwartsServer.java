@@ -10,7 +10,6 @@ public class HogwartsServer {
         Server server = ServerBuilder.forPort(8080).addService(new HogwartsServiceImpl()).build();
         server.start();
         System.out.println("Server started");
-        //HogwartsServiceImpl.broadcastTest();
         server.awaitTermination();
 
     }
