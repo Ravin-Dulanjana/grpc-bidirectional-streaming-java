@@ -1,0 +1,22 @@
+[
+  {
+  "itemName": "item1",
+  "quantity": 3,
+  "status": "available"
+},
+  {
+    "itemName": "item2",
+    "quantity": 1,
+    "status": "available"
+  },
+  {
+    "itemName": "item3",
+    "quantity": 0,
+    "status": "sold"
+  },
+  {
+    "itemName": "item4",
+    "quantity": 5,
+    "status": "available"
+  }
+]
